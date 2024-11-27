@@ -1,13 +1,12 @@
 <?php
-require './config/db.php';
+require 'config/db.php';
 
-// Mendapatkan ID produk dari parameter URL
-$id = $_GET['id'];
-
-// Hapus data produk
-mysqli_query($db_connect, "DELETE FROM products WHERE id = $id");
-
-// Redirect ke halaman data produk
-header("Location: index.php");
-exit();
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    
+    // Hapus produk
+    mysqli_query($db_connect, "DELETE FROM products WHERE id = '$id'");
+    header('Location: show.php'); // Redirect setelah hapus
+    exit;
+}
 ?>
