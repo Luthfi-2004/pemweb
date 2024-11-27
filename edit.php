@@ -1,47 +1,44 @@
 <?php
-require './config/db.php';
+require 'config/db.php';
 
-// Mendapatkan ID produk dari parameter URL
-$id = $_GET['id'];
-
-// Ambil data produk berdasarkan ID
-$product = mysqli_query($db_connect, "SELECT * FROM products WHERE id = $id");
-$row = mysqli_fetch_assoc($product);
-
-if (isset($_POST['update'])) {
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $image = $_POST['image']; // Jika ingin mengubah gambar juga
-
-    // Update data produk
-    mysqli_query($db_connect, "UPDATE products SET name='$name', price='$price', image='$image' WHERE id=$id");
-
-    // Redirect ke halaman data produk
-    header("Location: index.php");
-    exit();
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $product = mysqli_query($db_connect, "SELECT * FROM products WHERE id = '$id'");
+    $data = mysqli_fetch_assoc($product);
+    
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $name = $_POST['name'];
+        $price = $_POST['price'];
+        
+        // Update produk
+        mysqli_query($db_connect, "UPDATE products SET name = '$name', price = '$price' WHERE id = '$id'");
+        header('Location: show.php'); // Redirect setelah update
+        exit;
+    }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Produk</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Edit Produk</h1>
-    <form method="post">
-        <label>Nama Produk:</label>
-        <input type="text" name="name" value="<?= $row['name']; ?>" required><br><br>
-
-        <label>Harga:</label>
-        <input type="text" name="price" value="<?= $row['price']; ?>" required><br><br>
-
-        <label>Gambar URL:</label>
-        <input type="text" name="image" value="<?= $row['image']; ?>"><br><br>
-
-        <button type="submit" name="update">Update</button>
-    </form>
-    <a href="index.php">Kembali ke Data Produk</a>
+    <div class="container mt-5">
+        <h1>Edit Produk</h1>
+        <form action="" method="post">
+            <div class="form-group">
+                <label for="name">Nama Produk</label>
+                <input type="text" name="name" id="name" class="form-control" value="<?=$data['name'];?>" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Harga Produk</label>
+                <input type="number" name="price" id="price" class="form-control" value="<?=$data['price'];?>" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+        </form>
+    </div>
 </body>
 </html>

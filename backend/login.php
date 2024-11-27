@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['role'] = $data['role'];
 
             if ($_SESSION['role'] === 'admin') {
-                header('Location: ./../admin.php');
+                header('Location: ./../create.php');
             } else {
                 header('Location: ./../profile.php');
             }
